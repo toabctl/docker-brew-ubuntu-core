@@ -17,16 +17,7 @@ for v in "${versions[@]}"; do
 		continue
 	fi
 
-	thisTarBase="ubuntu-$v-core-cloudimg-$arch"
-	thisTar="$thisTarBase-root.tar.gz"
-	baseUrl="https://partner-images.canonical.com/core/$v/current"
-
-	(
-		cd "$v"
-		wget -qN "$baseUrl/"{{MD5,SHA{1,256}}SUMS{,.gpg},"$thisTarBase.manifest",'unpacked/build-info.txt'}
-		wget -N --progress=dot:giga "$baseUrl/$thisTar"
-	)
-
+	thisTar=ubuntu-bionic-core-cloudimg-amd64-root.tar.gz.fips
 	cat > "$v/Dockerfile" <<EOF
 FROM scratch
 ADD $thisTar /
@@ -94,6 +85,6 @@ EOF
 	toVerify+=( "$v" )
 done
 
-if [ "${#toVerify[@]}" -gt 0 ]; then
-	( set -x; ./verify.sh "${toVerify[@]}" )
-fi
+# if [ "${#toVerify[@]}" -gt 0 ]; then
+# 	( set -x; ./verify.sh "${toVerify[@]}" )
+# fi
